@@ -322,12 +322,15 @@ void PDFWindow::StoreFileAttributes() {
 
 ///////////////////////////////////////////////////////////
 bool PDFWindow::QuitRequested() {
-	if ((new BAlert("", "Save changes before exiting?",
+	int32 result = (new BAlert("", "Save changes before exiting?",
 		B_TRANSLATE("Cancel"), B_TRANSLATE("Don't save"),
 		B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_OFFSET_SPACING,
-		B_WARNING_ALERT))->Go() == 0) {
+		B_WARNING_ALERT))->Go();
 
-		be_app->PostMessage(SAVE_FILE_AS_CMD);
+	if (result == 0) {
+		return false;
+	} else if (result == 1) {
+		PostMessage(SAVE_FILE_AS_CMD);
 		return false;
 	}
 
