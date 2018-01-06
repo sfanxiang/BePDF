@@ -53,6 +53,7 @@
 #include <LayoutBuilder.h>
 
 // BePDF
+#include "Alert.h"
 #include "AnnotationWindow.h"
 #include "AnnotWriter.h"
 #include "AttachmentView.h"
@@ -321,6 +322,15 @@ void PDFWindow::StoreFileAttributes() {
 
 ///////////////////////////////////////////////////////////
 bool PDFWindow::QuitRequested() {
+	if ((new BAlert("", "Save changes before exiting?",
+		B_TRANSLATE("Cancel"), B_TRANSLATE("Don't save"),
+		B_TRANSLATE("Save"), B_OFFSET_SPACING, B_WIDTH_AS_USUAL,
+		B_WARNING_ALERT))->Go() == 0) {
+
+		be_app->PostMessage(SAVE_FILE_AS_CMD);
+		return false;
+	}
+
 	gApp->WindowClosed();
 	mMainView->WaitForPage(true);
 	StoreFileAttributes();
